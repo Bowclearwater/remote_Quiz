@@ -12,14 +12,30 @@ function(quiz) {
 }
 ).catch(function(error) { next(error);});
 };
+
 // GET /quizes
 exports.index = function(req, res) {
-models.Quiz.findAll().then(function(quizes) {
-res.render('quizes/index.ejs', { quizes: quizes});
+	var query={};
+	console.log('### req.query.search='+req.query.search);
+	if(req.query.search){
+		search=req.query.search;
+		search=search.split(" ").join('%');
+		search='%'+search+'%';
+	console.log('### search='+search);
+		query={
+			where: ["pregunta like ?",search],order: 'pregunta ASC'
+		};
 	}
-	).catch(function(error) { next(error);})
+	models.Quiz.findAll(query).then(function(quizes) {
+						res.render('quizes/index.ejs', { quizes: quizes});
+						}
+						).catch(function(error) {
+							next(error);
+						});
+	}
 
-};
+
+
 // GET /quizes/:id
 exports.show = function(req, res) {
 res.render('quizes/show', { quiz: req.quiz});
