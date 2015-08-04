@@ -1,6 +1,8 @@
 //MW de autorización de accesos HTTP restringidos
 exports.loginRequired=function(req,res,next){
 		if(req.session.user){
+			//console.log('###___'+req.session.user.id);
+			//console.log('###___'+req.session.user.username);
 			next();
 		}
 		else{
