@@ -31,13 +31,17 @@ exports.create = function(req, res) {
 	}
 	// Crear req.session.user y guardar campos id y username
 	// La sesión se define por la existencia de: req.session.user
-	req.session.user = {id:user.id, username:user.username};
+	req.session.user = {id:user.id, username:user.username, start_time:Date.now()};
 	res.redirect(req.session.redir.toString());// redirección a path anterior a login
+
 	});
+	//var autoloadController=require('./autoload_controller');
+	//autoloadController.save(req);
 };
 
 // DELETE /logout -- Destruir sesion
 exports.destroy = function(req, res) {
+	//console.log('entra destroy');
 	delete req.session.user;
 	res.redirect(req.session.redir.toString()); // redirect a path anterior a login
 };

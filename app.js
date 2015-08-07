@@ -10,6 +10,7 @@ var session=require('express-session');
 
 var routes = require('./routes/index');
 //no lo vamos a usar  var users = require('./routes/users');
+var autologoutController=require('./controllers/autologout_controller')
 
 var app = express();
 
@@ -38,6 +39,25 @@ app.use(function(req,res,next){
     }
     //Hacer visible req.session en las vistas
     res.locals.session=req.session;
+    next();
+});
+
+//Control autologout
+app.use('*',function(req,res,next){
+    //console.log('use#__req.session.user='+req.session.user);
+    if(req.session.user){
+        console.log('start_time= '+req.session.user.start_time);
+        var alive=true;
+        alive=autologoutController.check(req,res); // comprobar tiempo activo
+        //console.log('use__alive: '+alive);
+        if(!alive){
+            autologoutController.kill(req,res); //cerrar session
+        }
+        else{
+            autologoutController.save(req,res);  //Salvar time en cada transacción si sobrevive session
+        }
+    }
+    //console.log('use__fuera if='+req.session.user);
     next();
 });
 
