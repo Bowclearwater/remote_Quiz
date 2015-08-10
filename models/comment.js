@@ -16,8 +16,10 @@ module.exports=function(sequelize,DataTypes){
 				return count;
 				})},
 			countUnpublished: function () {
+
 				return this.aggregate('QuizId', 'count', {'where': { 'publicado': false }}).then('success',function(count) {
 				//cuenta comentarios sin publicar asociados a quizes
+
 				return count;
 				})}
 		}
