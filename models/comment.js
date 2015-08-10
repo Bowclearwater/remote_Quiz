@@ -8,5 +8,17 @@ module.exports=function(sequelize,DataTypes){
 		publicado: {
 			type:DataTypes.BOOLEAN,
 			defaultValue:false}
-		});
+		},
+	{
+		classMethods: {
+			countPregConComent: function () {
+				return this.aggregate('QuizId', 'count', { distinct: true }).then('success',function(count) { //cuenta quizes asociados a comentarios
+				return count;
+				})},
+			countUnpublished: function () {
+				return this.aggregate('QuizId', 'count', {'where': { 'publicado': false }}).then('success',function(count) {//cuenta quizes asociados a comentarios sin publicar
+				return count;
+				})}
+		}
+	});
 }
